@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="AcademicInfo">
+    <Key>
+      <PropertyRef Name="RId" />
+    </Key>
+    <Property Name="RId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="JSC" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="JSC_reg" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="SSC" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="SSC_reg" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="HSC" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="HSC_reg" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="FK_NID" Type="Int32" />
+    <NavigationProperty Name="UsersDetail" Relationship="Self.FK_AcademicInfos_UsersDetail" FromRole="AcademicInfos" ToRole="UsersDetail" />
+  </EntityType>
+  <EntityType Name="Apply">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="FK_Nid" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="UsersDetail" Relationship="Self.FK_Applies_UsersDetail" FromRole="Applies" ToRole="UsersDetail" />
+  </EntityType>
+  <EntityType Name="Login">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Uname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Type" Type="Int32" />
+    <NavigationProperty Name="UsersDetails" Relationship="Self.FK_UsersDetail_Users" FromRole="Logins" ToRole="UsersDetail" />
+  </EntityType>
+  <EntityType Name="UsersDetail">
+    <Key>
+      <PropertyRef Name="Nid" />
+    </Key>
+    <Property Name="Nid" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="FathersName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="MotherName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="PhoneNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Religion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Age" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Uid" Type="Int32" />
+    <NavigationProperty Name="AcademicInfos" Relationship="Self.FK_AcademicInfos_UsersDetail" FromRole="UsersDetail" ToRole="AcademicInfos" />
+    <NavigationProperty Name="Applies" Relationship="Self.FK_Applies_UsersDetail" FromRole="UsersDetail" ToRole="Applies" />
+    <NavigationProperty Name="Login" Relationship="Self.FK_UsersDetail_Users" FromRole="UsersDetail" ToRole="Logins" />
+  </EntityType>
+  <EntityType Name="Token">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Tkey" />
+      <PropertyRef Name="Username" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Tkey" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="StartingTime" Type="DateTime" Precision="3" />
+    <Property Name="EndTime" Type="DateTime" Precision="3" />
+    <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_AcademicInfos_UsersDetail">
+    <End Role="UsersDetail" Type="Self.UsersDetail" Multiplicity="0..1" />
+    <End Role="AcademicInfos" Type="Self.AcademicInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UsersDetail">
+        <PropertyRef Name="Nid" />
+      </Principal>
+      <Dependent Role="AcademicInfos">
+        <PropertyRef Name="FK_NID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Applies_UsersDetail">
+    <End Role="UsersDetail" Type="Self.UsersDetail" Multiplicity="1" />
+    <End Role="Applies" Type="Self.Apply" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UsersDetail">
+        <PropertyRef Name="Nid" />
+      </Principal>
+      <Dependent Role="Applies">
+        <PropertyRef Name="FK_Nid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UsersDetail_Users">
+    <End Role="Logins" Type="Self.Login" Multiplicity="0..1" />
+    <End Role="UsersDetail" Type="Self.UsersDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Logins">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UsersDetail">
+        <PropertyRef Name="Uid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DBEntities5" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="AcademicInfos" EntityType="Self.AcademicInfo" />
+    <EntitySet Name="Applies" EntityType="Self.Apply" />
+    <EntitySet Name="Logins" EntityType="Self.Login" />
+    <EntitySet Name="UsersDetails" EntityType="Self.UsersDetail" />
+    <EntitySet Name="Tokens" EntityType="Self.Token" />
+    <AssociationSet Name="FK_AcademicInfos_UsersDetail" Association="Self.FK_AcademicInfos_UsersDetail">
+      <End Role="UsersDetail" EntitySet="UsersDetails" />
+      <End Role="AcademicInfos" EntitySet="AcademicInfos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Applies_UsersDetail" Association="Self.FK_Applies_UsersDetail">
+      <End Role="UsersDetail" EntitySet="UsersDetails" />
+      <End Role="Applies" EntitySet="Applies" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UsersDetail_Users" Association="Self.FK_UsersDetail_Users">
+      <End Role="Logins" EntitySet="Logins" />
+      <End Role="UsersDetail" EntitySet="UsersDetails" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

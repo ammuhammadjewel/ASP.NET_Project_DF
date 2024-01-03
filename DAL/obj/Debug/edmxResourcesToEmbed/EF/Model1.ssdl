@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="AcademicInfos">
+    <Key>
+      <PropertyRef Name="RId" />
+    </Key>
+    <Property Name="RId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="JSC" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="JSC_reg" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="SSC" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="SSC_reg" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="HSC" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="HSC_reg" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="FK_NID" Type="int" />
+  </EntityType>
+  <EntityType Name="Applies">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="FK_Nid" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Logins">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Uname" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Type" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'DB.dbo.Tokens' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Tokens">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Tkey" />
+      <PropertyRef Name="Username" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Tkey" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="StartingTime" Type="datetime" />
+    <Property Name="EndTime" Type="datetime" />
+    <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UsersDetail">
+    <Key>
+      <PropertyRef Name="Nid" />
+    </Key>
+    <Property Name="Nid" Type="int" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="FathersName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="MotherName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="PhoneNo" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Address" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Religion" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Age" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Status" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Uid" Type="int" />
+  </EntityType>
+  <Association Name="FK_AcademicInfos_UsersDetail">
+    <End Role="UsersDetail" Type="Self.UsersDetail" Multiplicity="0..1" />
+    <End Role="AcademicInfos" Type="Self.AcademicInfos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UsersDetail">
+        <PropertyRef Name="Nid" />
+      </Principal>
+      <Dependent Role="AcademicInfos">
+        <PropertyRef Name="FK_NID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Applies_UsersDetail">
+    <End Role="UsersDetail" Type="Self.UsersDetail" Multiplicity="1" />
+    <End Role="Applies" Type="Self.Applies" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UsersDetail">
+        <PropertyRef Name="Nid" />
+      </Principal>
+      <Dependent Role="Applies">
+        <PropertyRef Name="FK_Nid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UsersDetail_Users">
+    <End Role="Logins" Type="Self.Logins" Multiplicity="0..1" />
+    <End Role="UsersDetail" Type="Self.UsersDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Logins">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UsersDetail">
+        <PropertyRef Name="Uid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DBModelStoreContainer">
+    <EntitySet Name="AcademicInfos" EntityType="Self.AcademicInfos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Applies" EntityType="Self.Applies" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Logins" EntityType="Self.Logins" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UsersDetail" EntityType="Self.UsersDetail" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Tokens" EntityType="Self.Tokens" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Tokens].[Id] AS [Id], 
+    [Tokens].[Tkey] AS [Tkey], 
+    [Tokens].[StartingTime] AS [StartingTime], 
+    [Tokens].[EndTime] AS [EndTime], 
+    [Tokens].[Username] AS [Username]
+    FROM [dbo].[Tokens] AS [Tokens]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_AcademicInfos_UsersDetail" Association="Self.FK_AcademicInfos_UsersDetail">
+      <End Role="UsersDetail" EntitySet="UsersDetail" />
+      <End Role="AcademicInfos" EntitySet="AcademicInfos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Applies_UsersDetail" Association="Self.FK_Applies_UsersDetail">
+      <End Role="UsersDetail" EntitySet="UsersDetail" />
+      <End Role="Applies" EntitySet="Applies" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UsersDetail_Users" Association="Self.FK_UsersDetail_Users">
+      <End Role="Logins" EntitySet="Logins" />
+      <End Role="UsersDetail" EntitySet="UsersDetail" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
